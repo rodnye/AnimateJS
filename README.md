@@ -1,5 +1,5 @@
 # AnimateJS
-![bounce-ball](http://github.com/RodnyE/raw/main/example/example.gif)  
+![bounce-ball](https://raw.githubusercontent.com/RodnyE/AnimateJS/main/example/example.gif)  
 Clase para crear y manipular animaciones directamente con Javascript en el navegador empleando internamente `setTimeout` y `requestAnimationFrame`.
 
 ## Primeros pasos
