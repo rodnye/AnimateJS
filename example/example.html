@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="animate.js"></script>
     <style>
       #target {
         width: 50px;
         height: 50px;
         position: relative;
         background: blue;
+        border-radius: 100px;
       }
     </style>
   </head>
   
   <body>
-    <div id="target" onclick="a.play()"></div>
+    <div id="target" onclick="animation.play()"></div>
     
+    <script src="../animate.min.js"></script>
     <script>
+    
       let target = document.getElementById("target");
       
       // animation
       let animation = new Animate({
-        duration: 10000,
+        duration: 2000,
         fps: "auto",
-        timing: Animate.ELASTIC,
-        erase: "in-out",
+        timing: Animate.BOUNCE,
+        erase: "out",
         statics: {},
         
         draw: function (progress, statics) {
-          target.style.left = 130 * progress + "px";
+          target.style.left = 130 * animation.frame + "px";
           target.style.top = 150 * progress + "px";
-          target.style.transform = "rotate(" + (140 * progress) + "deg)";
         }
       });
       
