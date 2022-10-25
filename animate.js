@@ -1,5 +1,5 @@
 /*
-  AnimateJS Manager
+  AnimateJS
 */
 
 Animate = function (cfg) {
@@ -10,6 +10,13 @@ Animate = function (cfg) {
   this.state = "stoped";
   this.frame = 0;
   
+  // events
+  this.eventHandler = {
+    play: function(){},
+    stop: function(){},
+    pause: function(){},
+    end: function(){}
+  };
   
   // Frames per Second (fps)
   let fps = cfg.fps;
@@ -51,7 +58,7 @@ Animate = function (cfg) {
 // RENDER FRAME (DRAW)
 Animate.prototype.renderFrame = function (time) {
   let frame = (time - this.timeStart) / this.duration;
-  if (frame > 1) frame = 1;
+  if (frame >= 1) frame = 1;
   this.frame = frame;
   this.draw(this.timing(frame), this.statics);
   
@@ -59,7 +66,8 @@ Animate.prototype.renderFrame = function (time) {
     if (this.state == "playing") this.requestAnimationFrame(this.renderFrame.bind(this));
   }
   else {
-    this.state = "stop";
+    this.state = "stoped";
+    console.log(this)
     this.eventHandler.end();
   }
 };
@@ -104,13 +112,6 @@ Animate.prototype.toFrame = function (frame) {
 // EVENTS
 Animate.prototype.on = function (event, callback) {
   this.eventHandler[event] = callback;
-};
-
-Animate.prototype.eventHandler = {
-  play: function(){},
-  stop: function(){},
-  pause: function(){},
-  end: function(){}
 };
 
 
