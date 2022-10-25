@@ -67,7 +67,6 @@ Animate.prototype.renderFrame = function (time) {
   }
   else {
     this.state = "stoped";
-    console.log(this)
     this.eventHandler.end();
   }
 };
