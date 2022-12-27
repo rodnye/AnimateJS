@@ -1,5 +1,5 @@
 # AnimateJS
-![bounce-ball](https://raw.githubusercontent.com/RodnyE/AnimateJS/main/example/example.gif)  
+![bounce-ball](https://raw.githubusercontent.com/RodnyE/AnimateJS/main/src/example.gif)  
 Clase para crear y manipular animaciones de manera sencilla y directa con Javascript en el navegador empleando internamente `setTimeout` y `requestAnimationFrame`.
 
 ## Primeros pasos
@@ -35,7 +35,7 @@ let animation = new Animate({
   erase: "in",
   timing: Animate.LINEAR,
   statics: {},
-  draw: function (progress, statics) {
+  draw: function (progress, anima) {
     elem.style.left = (150 * progress) + "px";
   }
 });
@@ -50,7 +50,7 @@ Acepta como único parámetro un objeto de opciones que contiene:
 `number`  
 (requerido) Duración de la animación en milisegundos.
 
-### `opt.draw(progress, statics)`
+### `opt.draw(progress, animation)`
 (requerido)  
 Es la función que toma el estado de finalización de la animación y la dibuja. El valor `progress=0` denota el estado inicial de la animación y `progress=1` el estado final.
 Esta es la función que dibuja la animación, o hacer lo que sea con ella:
@@ -59,6 +59,8 @@ function draw (progress) {
   elem.style.left = progress + "px";
 }
 ```
+
+El segundo argumento es la animación donde se está usando la función de dibujado.
 
 
 ### `opt.fps`
@@ -117,20 +119,25 @@ let a = new Animate({
 
 ### `opt.statics`
 (por defecto `undefined`)  
-Variable personalizable donde podremos acceder mediante la función de dibujo `draw`
+Variable personalizable donde podremos almacenar cualquier informacion en nuestra animación
 
 ```javascript
 let a = new Animate({
   duration: 15000,
   timing: Animate.ELASTIC,
   ease: "in-out", 
-  statics: {x: 5, y: 60.7},
   
-  draw: function(progress, statics) {
-    // ...
+  statics: {
+    x: 5, 
+    y: 60.7
+  },
+  
+  draw: function(progress, animation) {
+    
+    let statics = animation.statics;
     console.log(statics.x) // 5
     console.log(statics.y) // 60.7
-    // ...
+    
   }
 });
 ```
@@ -139,11 +146,11 @@ let a = new Animate({
 ### `duration`
 El mismo valor de duración introducido como parámetro. Puede ser modificado dinámicamente para alterar las velocidades durante la animación:
 ```javascript
-let animation = new Animate({
+new Animate({
   duration: 10000,
   timing: Animate.CIRC,
   ease: "out", 
-  draw: function(progress) {
+  draw: function(progress, animation) {
     elem.style.width = progress * 100 + "px";
     animation.duration --; //reducir duración a medida que avanza
   }
@@ -170,20 +177,22 @@ El valor de la cantidad de cuadros por segundos a ejecutar.
 
 
 ## Métodos
+### `clone()`
+Retorna una nueva instancia `Animate` con las mismas características que el original.
+
+### `destroy()`
+Destruye por completo la animación, despues de ser usado este método la animación quedará como un objeto vacío.
+
 ### `play()`
-`void`  
 Comenzar la animación, si estaba pausada, continuará por donde se dejó:
 
 ### `pause()`
-`void`  
 Pausar animación, se guardará el avance actual, si se llama al método `play()` continuará la reproducción.
 
 ### `stop()`
-`void`  
 Detener completamente la animación, si se llama el método `play()`, comenzará desde el inicio.
 
 ### `toFrame( frame )`
-`void`  
 Avanzar o retroceder la animación hasta el cuadro indicado.
 `frame` debe ser un valor entre 0 y 1, el 0 indica el inicio, y el 1 el final. Así por ejemplo, el `frame=0.5` representaría la mitad de la animación
 
@@ -196,14 +205,13 @@ let animation = new Animate({
     let angle = progress * 90;
     elem.style.transform = "rotation(" + angle + "deg)";
   }
-});
+})
 
 animation.toFrame(0.5);
 animation.play();
 ```
 
 ### `on(event, callback)`
-`void`  
 Declarar eventos para la animación. Los eventos disponibles son:
 ```javascript
 "onplay"

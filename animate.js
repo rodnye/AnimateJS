@@ -1,6 +1,6 @@
 /*
-  AnimateJS
-*/
+ * AnimateJS
+ */
 
 Animate = function (cfg) {
   
@@ -60,19 +60,46 @@ Animate.prototype.renderFrame = function (time) {
   let frame = (time - this.timeStart) / this.duration;
   if (frame >= 1) frame = 1;
   this.frame = frame;
-  this.draw(this.timing(frame), this.statics);
+  this.draw(this.timing(frame), this);
   
   if (frame < 1) {
     if (this.state == "playing") this.requestAnimationFrame(this.renderFrame.bind(this));
   }
   else {
     this.state = "stoped";
-    this.eventHandler.end();
+    this.eventHandler.end(this);
   }
 };
 
 
 // actions
+// CLONE ANIMATION
+Animate.prototype.clone = function () {
+  return new Animate({
+    duration: this.duration,
+    fps: this.fps,
+    statics: this.statics,
+    timing: this.timing,
+    draw: this.draw
+  });
+}
+
+
+// DESTROY ANIMATION
+Animate.prototype.destroy = function () {
+  this
+    .on("stop", function(){})
+    .stop();
+  
+  // eliminar propiedades
+  let props = Object.keys(this);
+  for (let i = 0; i < props.length; i++) delete this[props[i]];
+  
+  // eliminar prototipo
+  Object.setPrototypeOf(this, null);
+}
+
+
 // PLAY ANIMATION
 Animate.prototype.play = function () {
   
@@ -81,36 +108,50 @@ Animate.prototype.play = function () {
   this.timeStart = timeStart;
   
   this.state = "playing";
-  this.eventHandler.play();
+  this.eventHandler.play(this);
   this.renderFrame(timeStart);
+  
+  return this;
 };
+
 
 // STOP ANIMATION
 Animate.prototype.stop = function () {
   this.state = "stoped";
-  this.eventHandler.stop();
+  this.eventHandler.stop(this);
+  
+  return this;
 };
+
 
 // PAUSE ANIMATION
 Animate.prototype.pause = function () {
   if (this.state == "playing") {
     this.state = "paused";
-    this.eventHandler.pause();
+    this.eventHandler.pause(this);
   }
+  
+  return this;
 }
+
 
 // MOVE ANIMATION
 Animate.prototype.toFrame = function (frame) {
   let time = performance.now();
+  this.state = "paused";
   this.timeStart = time - this.duration * frame;
   this.frame = frame;
   this.renderFrame(time);
+  
+  return this;
 }
 
 
 // EVENTS
 Animate.prototype.on = function (event, callback) {
   this.eventHandler[event] = callback;
+  
+  return this;
 };
 
 
