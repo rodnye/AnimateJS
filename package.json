@@ -1,0 +1,25 @@
+{
+  "name": "animatejs",
+  "version": "1.0.2",
+  "description": "JavaScript animation creator for browsers",
+  "main": "gulpfile.js",
+  "scripts": {
+    "dist": "gulp dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RodnyE/AnimateJS.git"
+  },
+  "author": "Rodny Estrada León",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RodnyE/AnimateJS/issues"
+  },
+  "homepage": "https://github.com/RodnyE/AnimateJS#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
+    "gulp-rename": "^2.0.0",
+    "assign-symbols": "^1.0.0"
+  }
+}
